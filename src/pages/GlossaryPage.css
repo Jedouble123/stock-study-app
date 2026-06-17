@@ -1,0 +1,166 @@
+.glossary-page {
+  padding: 1.2rem 1rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Progress */
+.progress-banner {
+  background: #fff;
+  border: 1.5px solid #fde68a;
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.progress-count {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #d97706;
+}
+
+.progress-track {
+  height: 8px;
+  background: #fef3c7;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+
+.progress-complete {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #16a34a;
+  text-align: center;
+}
+
+/* Search */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 0.6rem 0.9rem;
+  transition: border-color 0.15s;
+}
+
+.search-bar:focus-within {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+}
+
+.search-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-clear {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+}
+
+/* Tabs */
+.category-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-tab {
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.category-tab:hover {
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+.category-tab--active {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #fff;
+}
+
+/* Count */
+.term-count {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.search-info {
+  color: #d97706;
+  font-weight: 600;
+}
+
+/* Grid */
+.terms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.9rem;
+}
+
+/* Empty */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-emoji {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-text {
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
