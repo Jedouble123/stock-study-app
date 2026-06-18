@@ -5,6 +5,12 @@
   background: var(--white);
 }
 
+/* Story viewer fills the whole screen */
+.learn-page--story {
+  height: 100vh;
+  overflow: hidden;
+}
+
 /* ─── Top bar ──────────────────────────────── */
 .learn-topbar {
   display: flex;

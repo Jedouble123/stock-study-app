@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TERMS } from '../data/glossary';
+import StoryViewer from '../components/StoryViewer';
 import { sounds } from '../utils/sounds';
 import './LearnPage.css';
 
 const termById = Object.fromEntries(TERMS.map((t) => [t.id, t]));
 
-function renderBold(text) {
-  return text.split(/\*\*(.+?)\*\*/g).map((part, i) =>
-    i % 2 === 1 ? <strong key={i}>{part}</strong> : part,
-  );
-}
-
+/* ── Intro slide (unchanged) ─────────────────────── */
 function IntroSlide({ chapter }) {
   return (
     <div className="slide slide--intro">
@@ -29,41 +25,7 @@ function IntroSlide({ chapter }) {
   );
 }
 
-function TermSlide({ term }) {
-  return (
-    <div className="slide slide--term">
-      <div className="term-slide-header">
-        <div className="term-slide-scene">
-          {term.scene.map((s, i) => <span key={i}>{s}</span>)}
-        </div>
-        <h2 className="term-slide-name">{term.term}</h2>
-        <p className="term-slide-en">{term.termEn}</p>
-      </div>
-
-      <div className="term-slide-body">
-        <div className="story-block">
-          <div className="story-label">📖 옛날이야기</div>
-          <div className="story-paragraphs">
-            {term.story.map((para, i) => (
-              <p key={i} className="story-p">{renderBold(para)}</p>
-            ))}
-          </div>
-        </div>
-        <div className="analogy-row">
-          <span>💬</span>
-          <span>{term.analogy}</span>
-        </div>
-        <div className="keypoints">
-          <div className="keypoints-label">핵심 정리</div>
-          <ul>
-            {term.keyPoints.map((pt, i) => <li key={i}>{pt}</li>)}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-}
-
+/* ── Quiz transition slide (unchanged) ──────────── */
 function QuizTransitionSlide({ chapter }) {
   return (
     <div className="slide slide--transition">
@@ -77,60 +39,73 @@ function QuizTransitionSlide({ chapter }) {
   );
 }
 
+/* ── LearnPage ──────────────────────────────────── */
+// phase: 'intro' | 'stories' | 'quiz-transition'
 export default function LearnPage({ chapter, onStartQuiz, onBack }) {
-  const terms = chapter.termIds.map((id) => termById[id]).filter(Boolean);
-  const totalSlides = 1 + terms.length + 1;
-
-  const [slideIndex, setSlideIndex] = useState(0);
-  const [dir, setDir] = useState('next');
-  const [animating, setAnimating] = useState(false);
+  const [phase, setPhase] = useState('intro');
 
   useEffect(() => {
     return () => sounds.stopBGM();
   }, []);
 
-  const pct = Math.round((slideIndex / (totalSlides - 1)) * 100);
-  const isLastSlide = slideIndex === totalSlides - 1;
+  /* ── INTRO phase ── */
+  if (phase === 'intro') {
+    return (
+      <div className="learn-page">
+        <div className="learn-topbar">
+          <button className="learn-close-btn" onClick={() => { sounds.click(); onBack(); }}>✕</button>
+          <div className="learn-bar-wrap">
+            <div className="learn-bar-fill" style={{ width: '3%' }} />
+          </div>
+          <span className="learn-count">도입</span>
+        </div>
 
-  const go = (delta) => {
-    if (animating) return;
-    const next = slideIndex + delta;
-    if (next < 0) { sounds.click(); onBack(); return; }
-    sounds.slide();
-    setDir(delta > 0 ? 'next' : 'prev');
-    setAnimating(true);
-    setTimeout(() => { setSlideIndex(next); setAnimating(false); }, 150);
-  };
+        <div className="learn-slide-wrap">
+          <IntroSlide chapter={chapter} />
+        </div>
 
-  const renderSlide = () => {
-    if (slideIndex === 0) return <IntroSlide chapter={chapter} />;
-    if (slideIndex === totalSlides - 1) return <QuizTransitionSlide chapter={chapter} />;
-    return <TermSlide term={terms[slideIndex - 1]} />;
-  };
+        <div className="learn-bottom">
+          <button className="learn-next-btn" onClick={() => { sounds.slide(); setPhase('stories'); }}>
+            시작하기 →
+          </button>
+        </div>
+      </div>
+    );
+  }
 
+  /* ── STORIES phase — full-screen StoryViewer ── */
+  if (phase === 'stories') {
+    return (
+      <div className="learn-page learn-page--story">
+        <StoryViewer
+          termIds={chapter.termIds}
+          onFinish={() => { sounds.slide(); setPhase('quiz-transition'); }}
+          onBack={() => { sounds.slide(); setPhase('intro'); }}
+        />
+      </div>
+    );
+  }
+
+  /* ── QUIZ TRANSITION phase ── */
   return (
     <div className="learn-page">
       <div className="learn-topbar">
-        <button className="learn-close-btn" onClick={onBack} aria-label="나가기">✕</button>
+        <button className="learn-close-btn" onClick={() => { sounds.click(); setPhase('stories'); }}>✕</button>
         <div className="learn-bar-wrap">
-          <div className="learn-bar-fill" style={{ width: `${Math.max(pct, 3)}%` }} />
+          <div className="learn-bar-fill" style={{ width: '100%' }} />
         </div>
-        <span className="learn-count">{slideIndex + 1}/{totalSlides}</span>
+        <span className="learn-count">완료</span>
       </div>
 
-      <div className={`learn-slide-wrap ${animating ? `slide-exit-${dir}` : ''}`}>
-        {renderSlide()}
+      <div className="learn-slide-wrap">
+        <QuizTransitionSlide chapter={chapter} />
       </div>
 
       <div className="learn-bottom">
-        {slideIndex > 0 && (
-          <button className="learn-prev-btn" onClick={() => go(-1)}>← 이전</button>
-        )}
-        {!isLastSlide ? (
-          <button className="learn-next-btn" onClick={() => go(1)}>다음 →</button>
-        ) : (
-          <button className="learn-next-btn" onClick={() => { sounds.quizStart(); onStartQuiz(); }}>퀴즈 시작! 🧩</button>
-        )}
+        <button className="learn-prev-btn" onClick={() => { sounds.slide(); setPhase('stories'); }}>← 이전</button>
+        <button className="learn-next-btn" onClick={() => { sounds.quizStart(); onStartQuiz(); }}>
+          퀴즈 시작! 🧩
+        </button>
       </div>
     </div>
   );
