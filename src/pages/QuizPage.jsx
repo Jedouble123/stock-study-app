@@ -1,20 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { sounds } from '../utils/sounds';
 import './QuizPage.css';
 
 const PASS_RATIO = 0.7;
 
+/* ── ComboToast ─────────────────────────────────── */
+function ComboToast({ combo }) {
+  if (combo < 2) return null;
+  const msgs = ['', '', '2연속 🔥', '3연속 🔥🔥', '4연속 💥', '5연속 ⚡️'];
+  const label = msgs[combo] ?? `${combo}연속 🔥`;
+  return <div className="combo-toast" key={combo}>{label}</div>;
+}
+
+/* ── HintBox ────────────────────────────────────── */
+function HintBox({ hint }) {
+  return (
+    <div className="hint-box">
+      <span className="hint-icon">💡</span>
+      <span className="hint-text">{hint}</span>
+    </div>
+  );
+}
+
+/* ── QuizPage ───────────────────────────────────── */
 export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
   const questions = chapter.quiz;
 
-  const [qIndex,   setQIndex]   = useState(0);
-  const [selected, setSelected] = useState(null);   // chosen option index
-  const [checked,  setChecked]  = useState(false);  // "확인" pressed
-  const [answers,  setAnswers]  = useState([]);
-  const [phase,    setPhase]    = useState('question'); // 'question' | 'result'
+  const [qIndex,      setQIndex]      = useState(0);
+  const [selected,    setSelected]    = useState(null);
+  const [checked,     setChecked]     = useState(false);
+  const [answers,     setAnswers]     = useState([]); // {correct, selectedIdx, correctIdx}
+  const [phase,       setPhase]       = useState('question');
+  const [combo,       setCombo]       = useState(0);
+  const [maxCombo,    setMaxCombo]    = useState(0);
+  const [hintVisible, setHintVisible] = useState(false);
+  const [animKey,     setAnimKey]     = useState(0);
 
   const currentQ  = questions[qIndex];
   const isCorrect = checked && selected === currentQ?.correctIndex;
+  const wrongCount = answers.filter(a => !a.correct).length;
 
   const handleSelect = (i) => {
     if (checked) return;
@@ -29,33 +53,60 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
     else sounds.wrong();
   };
 
-  const handleNext = () => {
-    const newAnswers = [...answers, selected === currentQ.correctIndex];
+  const handleHint = () => {
+    if (checked || hintVisible) return;
+    sounds.click();
+    setHintVisible(true);
+  };
+
+  const handleNext = useCallback(() => {
+    const correct = selected === currentQ.correctIndex;
+    const newCombo    = correct ? combo + 1 : 0;
+    const newMaxCombo = Math.max(maxCombo, newCombo);
+    const newAnswers  = [...answers, {
+      correct,
+      selectedIdx: selected,
+      correctIdx: currentQ.correctIndex,
+      question: currentQ.question,
+      options: currentQ.options,
+    }];
+
+    setCombo(newCombo);
+    setMaxCombo(newMaxCombo);
     setAnswers(newAnswers);
+
     if (qIndex + 1 < questions.length) {
       sounds.slide();
-      setQIndex((q) => q + 1);
+      setQIndex(q => q + 1);
       setSelected(null);
       setChecked(false);
+      setHintVisible(false);
+      setAnimKey(k => k + 1);
     } else {
-      const didPass = newAnswers.filter(Boolean).length / questions.length >= PASS_RATIO;
+      const score   = newAnswers.filter(a => a.correct).length;
+      const didPass = score / questions.length >= PASS_RATIO;
       if (didPass) sounds.complete();
       setPhase('result');
     }
-  };
+  }, [selected, currentQ, combo, maxCombo, answers, qIndex, questions.length]);
 
-  const score  = answers.filter(Boolean).length;
+  const score  = answers.filter(a => a.correct).length;
   const passed = phase === 'result' && score / questions.length >= PASS_RATIO;
 
   if (phase === 'result') {
-    return <ResultScreen
-      chapter={chapter}
-      score={score}
-      total={questions.length}
-      passed={passed}
-      onComplete={onComplete}
-      onRetry={onRetry}
-    />;
+    return (
+      <ResultScreen
+        chapter={chapter}
+        score={score}
+        total={questions.length}
+        passed={passed}
+        maxCombo={maxCombo}
+        answers={answers}
+        questions={questions}
+        onComplete={onComplete}
+        onRetry={onRetry}
+      />
+    );
   }
 
   const footerState = !checked ? 'idle' : isCorrect ? 'correct' : 'wrong';
@@ -66,22 +117,33 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
       <div className="quiz-topbar">
         <button className="quiz-close-btn" onClick={onBack}>✕</button>
         <div className="quiz-bar-wrap">
-          <div
-            className="quiz-bar-fill"
-            style={{ width: `${(qIndex / questions.length) * 100}%` }}
-          />
+          <div className="quiz-bar-fill" style={{ width: `${(qIndex / questions.length) * 100}%` }} />
         </div>
         <div className="quiz-lives">
           {Array.from({ length: 3 }, (_, i) => (
-            <span key={i} className={`heart ${answers.filter(x => !x).length > i ? 'heart--lost' : ''}`}>❤️</span>
+            <span key={i} className={`heart ${wrongCount > i ? 'heart--lost' : ''}`}>❤️</span>
           ))}
         </div>
       </div>
 
       {/* Question body */}
-      <div className="quiz-body">
-        <p className="quiz-q-num">문제 {qIndex + 1}/{questions.length}</p>
+      <div className="quiz-body" key={animKey}>
+        <div className="quiz-q-meta">
+          <p className="quiz-q-num">문제 {qIndex + 1}/{questions.length}</p>
+          {currentQ.hint && !checked && (
+            <button
+              className={`hint-btn ${hintVisible ? 'hint-btn--used' : ''}`}
+              onClick={handleHint}
+              disabled={hintVisible}
+            >
+              {hintVisible ? '💡 힌트 확인됨' : '💡 힌트 보기'}
+            </button>
+          )}
+        </div>
+
         <p className="quiz-question">{currentQ.question}</p>
+
+        {hintVisible && <HintBox hint={currentQ.hint} />}
 
         <div className="options-list">
           {currentQ.options.map((opt, i) => {
@@ -121,9 +183,12 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
         ) : (
           <div className="quiz-feedback-row">
             <div className="quiz-feedback-text">
-              <p className="quiz-feedback-verdict">
-                {isCorrect ? '🎉 정답이에요!' : '🥲 아쉬워요!'}
-              </p>
+              <div className="quiz-feedback-top">
+                <p className="quiz-feedback-verdict">
+                  {isCorrect ? '🎉 정답이에요!' : '🥲 아쉬워요!'}
+                </p>
+                {isCorrect && <ComboToast combo={combo + 1} />}
+              </div>
               <p className="quiz-feedback-explain">{currentQ.explanation}</p>
             </div>
             <button className={`quiz-next-btn quiz-next-btn--${footerState}`} onClick={handleNext}>
@@ -136,8 +201,10 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
   );
 }
 
-function ResultScreen({ chapter, score, total, passed, onComplete, onRetry }) {
-  const pct = Math.round((score / total) * 100);
+/* ── ResultScreen ───────────────────────────────── */
+function ResultScreen({ chapter, score, total, passed, maxCombo, answers, questions, onComplete, onRetry }) {
+  const pct    = Math.round((score / total) * 100);
+  const xp     = passed ? 100 + maxCombo * 10 : 0;
 
   useEffect(() => {
     if (passed) {
@@ -145,28 +212,40 @@ function ResultScreen({ chapter, score, total, passed, onComplete, onRetry }) {
       return () => clearTimeout(t);
     }
   }, [passed]);
+
   return (
     <div className="result-screen">
+      {/* Hero */}
       <div className={`result-top ${passed ? 'result-top--pass' : 'result-top--fail'}`}>
+        {passed && <div className="confetti-wrap" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span key={i} className="confetti-dot" style={{ '--i': i }} />
+          ))}
+        </div>}
         <div className="result-icon">{passed ? '🏆' : '😅'}</div>
         <h2 className="result-title">{passed ? '통과!' : '다시 도전!'}</h2>
-        <p className="result-subtitle">
-          {score}/{total} 정답 · {pct}%
-        </p>
+        <p className="result-subtitle">{score}/{total} 정답 · {pct}%</p>
         <div className="result-bar-track">
           <div
             className={`result-bar-fill ${passed ? 'result-bar-fill--pass' : 'result-bar-fill--fail'}`}
             style={{ width: `${pct}%` }}
           />
         </div>
+        {passed && maxCombo >= 2 && (
+          <p className="result-combo-badge">🔥 최고 콤보 {maxCombo}연속!</p>
+        )}
       </div>
 
+      {/* Body */}
       <div className="result-body">
         {passed ? (
           <>
             <div className="result-msg result-msg--pass">
-              <strong>🌟 {chapter.title}</strong> 챕터 완료!<br />
-              <span className="result-xp-badge">+100 XP 획득!</span>
+              <strong>🌟 {chapter.title}</strong> 챕터 완료!
+              <div className="result-xp-row">
+                <span className="result-xp-badge">+{xp} XP</span>
+                {maxCombo >= 2 && <span className="result-xp-bonus">콤보 보너스 +{maxCombo * 10} XP 포함!</span>}
+              </div>
             </div>
             <button className="result-cta result-cta--pass" onClick={onComplete}>
               다음 챕터 가기 →
@@ -185,6 +264,25 @@ function ResultScreen({ chapter, score, total, passed, onComplete, onRetry }) {
             </button>
           </>
         )}
+
+        {/* 오답 노트 */}
+        <div className="review-section">
+          <p className="review-title">📋 문제 리뷰</p>
+          {answers.map((ans, i) => (
+            <div key={i} className={`review-card ${ans.correct ? 'review-card--ok' : 'review-card--ng'}`}>
+              <div className="review-card-top">
+                <span className="review-badge">{ans.correct ? '✅' : '❌'}</span>
+                <span className="review-q-text">{questions[i].question}</span>
+              </div>
+              {!ans.correct && (
+                <div className="review-answer">
+                  <span className="review-my">내 답: {ans.options[ans.selectedIdx]}</span>
+                  <span className="review-correct">정답: {ans.options[ans.correctIdx]}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

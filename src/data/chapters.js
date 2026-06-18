@@ -22,6 +22,7 @@ export const CHAPTERS = [
         question: '토끼 아저씨처럼 회사 소유권을 잘게 나눈 조각을 뭐라고 부를까요?',
         options: ['배당금', '주식', '주가', '주주'],
         correctIndex: 1,
+        hint: '빵집 주인 자격증 한 장 = 이것 1주! 소유권을 잘게 나눈 조각이에요.',
         explanation: '맞아요! 주식은 회사 소유권을 조각조각 나눈 것이에요. 빵집 주인 자격증 한 장이 주식 1주! 🏠',
       },
       {
@@ -29,6 +30,7 @@ export const CHAPTERS = [
         question: '주식을 가진 사람, 즉 회사의 공동 주인을 뭐라고 부를까요?',
         options: ['사장님', '주주', '직원', '투자가'],
         correctIndex: 1,
+        hint: '주식을 "가진" 사람이에요. 주(株) + 주(主) = 주식의 주인!',
         explanation: '주식을 가진 사람은 주주예요! 다람쥐도, 곰도, 여우도 모두 주주가 됐어요. 👑',
       },
       {
@@ -36,6 +38,7 @@ export const CHAPTERS = [
         question: '빵집이 TV에 나와서 유명해졌어요. 주식을 사고 싶은 사람이 많아지면 주가는?',
         options: ['내려간다', '그대로다', '올라간다', '사라진다'],
         correctIndex: 2,
+        hint: '수요 공급의 법칙! 원하는 사람이 많아지면 가격이 어떻게 될까요?',
         explanation: '사고 싶은 사람이 많아질수록 가격이 올라가요! 수요 공급의 법칙이에요. 📈',
       },
       {
@@ -43,6 +46,7 @@ export const CHAPTERS = [
         question: '"주가"가 의미하는 것은 무엇일까요?',
         options: ['회사 이름', '주식 한 장의 현재 가격', '회사 직원 수', '주주의 수'],
         correctIndex: 1,
+        hint: '주(株) = 주식, 가(價) = 가격. 주식 "한 장"의 지금 이 순간 가격!',
         explanation: '주가는 주식 한 장(1주)의 현재 가격이에요! 매일, 심지어 1초마다 바뀔 수 있어요. 💰',
       },
     ],
@@ -62,6 +66,7 @@ export const CHAPTERS = [
         question: '회사 주식을 공개 주식 시장에서 사고팔 수 있게 되는 것을 무엇이라 할까요?',
         options: ['배당', '매수', '상장', '합병'],
         correctIndex: 2,
+        hint: '동네 빵집이 전국 시장에 "올라오는" 것이에요. 올릴 상(上)!',
         explanation: '상장이에요! 마을 빵집이 전국 주식 시장에 데뷔하는 것과 같아요. 🚀',
       },
       {
@@ -69,6 +74,7 @@ export const CHAPTERS = [
         question: '주식을 사고파는 공식 시장을 무엇이라 부를까요?',
         options: ['편의점', '거래소', '은행', '백화점'],
         correctIndex: 1,
+        hint: '거래(사고팔기) + 소(장소). 주식을 사고파는 공식 장소!',
         explanation: '거래소예요! 우리나라에는 한국거래소(KRX)가 있어요. 🏛️',
       },
       {
@@ -76,6 +82,7 @@ export const CHAPTERS = [
         question: '시가총액을 구하는 공식은 무엇일까요?',
         options: ['주가 + 주식 수', '주가 × 주식 수', '주가 ÷ 주식 수', '주가 - 주식 수'],
         correctIndex: 1,
+        hint: '집 전체 가격 = 평당 가격 × 면적. 회사도 같은 방식이에요!',
         explanation: '주가 × 주식 수 = 시가총액! 회사 전체의 가격이에요. 클수록 더 큰 회사! ⚖️',
       },
       {
@@ -83,6 +90,7 @@ export const CHAPTERS = [
         question: '삼성, 현대 같은 우리나라 대기업들의 주가를 모아서 나타낸 지수는?',
         options: ['코스닥', '코스피', '나스닥', '다우존스'],
         correctIndex: 1,
+        hint: 'KO(코) + S(스) + P(피) — Korea Stock Price Index의 약자예요!',
         explanation: '코스피(KOSPI)예요! 코스피가 오르면 대기업들이 잘 되고 있다는 신호예요. 🇰🇷',
       },
     ],
@@ -102,6 +110,7 @@ export const CHAPTERS = [
         question: '다람쥐가 토끼 빵집 주식을 샀어요! 이 행동을 무엇이라 할까요?',
         options: ['매도', '배당', '매수', '상장'],
         correctIndex: 2,
+        hint: '"사다"를 한자로 매수(買受). 살 매(買)! 반대말은 팔 매(賣).',
         explanation: '주식을 사는 것이 매수예요! "사다 = 매수" 꼭 기억해요. 🛒',
       },
       {
@@ -109,6 +118,7 @@ export const CHAPTERS = [
         question: '다람쥐가 2배로 오른 주식을 팔았어요! 이것을 무엇이라 할까요?',
         options: ['매수', '배당', '상장', '매도'],
         correctIndex: 3,
+        hint: '"팔다"를 한자로 매도(賣渡). 팔 매(賣)! 매수의 반대예요.',
         explanation: '주식을 파는 것이 매도예요! 매수↔매도, 한 쌍으로 기억해요. 💸',
       },
       {
@@ -116,6 +126,7 @@ export const CHAPTERS = [
         question: '우리나라에서 주가가 하루에 오를 수 있는 최대 한계는 몇 %일까요?',
         options: ['10%', '15%', '20%', '30%'],
         correctIndex: 3,
+        hint: '10%, 15%, 20%는 너무 낮아요. 꽤 넉넉한 한도예요!',
         explanation: '30%예요! 이 한계에 닿은 것이 "상한가"예요. 하루 최고 성적표! 🔝',
       },
       {
@@ -123,6 +134,7 @@ export const CHAPTERS = [
         question: '주가가 너무 빨리 내려가는 걸 막아주는 하루 하락 한계선을 뭐라 할까요?',
         options: ['상한가', '하한가', '기준가', '종가'],
         correctIndex: 1,
+        hint: '상한가의 반대예요. 아래(下)로 내리는 한계선!',
         explanation: '하한가예요! 하루에 -30%까지만 내릴 수 있어요. 투자자 보호 안전장치! 🛡️',
       },
     ],
@@ -142,6 +154,7 @@ export const CHAPTERS = [
         question: '캔들차트에서 초록색(파란색) 캔들이 의미하는 것은 무엇일까요?',
         options: ['가격이 내렸다', '거래가 없었다', '가격이 올랐다', '주식이 상장됐다'],
         correctIndex: 2,
+        hint: '식물에서 초록 = 성장! 주가도 초록이면 좋은 방향으로 움직인 거예요.',
         explanation: '초록(파란) 캔들 = 오늘 가격이 올랐다는 뜻! 빨간 캔들은 내렸다는 뜻이에요. 🟩',
       },
       {
@@ -149,6 +162,7 @@ export const CHAPTERS = [
         question: '캔들 하나에는 몇 가지 가격 정보가 담겨 있을까요?',
         options: ['1가지', '2가지', '3가지', '4가지'],
         correctIndex: 3,
+        hint: '시가·고가·저가·종가 — 이걸 직접 세보세요!',
         explanation: '4가지예요! 시가(시작)·고가(최고)·저가(최저)·종가(마지막). 이 4개가 캔들 하나에! 🕯️',
       },
       {
@@ -156,6 +170,7 @@ export const CHAPTERS = [
         question: '캔들차트를 왜 사용할까요?',
         options: ['회사 이름을 보려고', '주가 흐름을 한눈에 보려고', '배당금을 계산하려고', '직원 수를 확인하려고'],
         correctIndex: 1,
+        hint: '캔들 여러 개를 나란히 이어보면 무엇이 보일까요?',
         explanation: '캔들을 쭉 이어보면 주가 흐름이 한눈에 보여요! 과거 흐름으로 미래를 예측하는 데 써요. 📊',
       },
     ],
@@ -175,6 +190,7 @@ export const CHAPTERS = [
         question: '회사가 이익의 일부를 주주에게 나눠주는 돈을 무엇이라 할까요?',
         options: ['주가', '시가총액', '배당금', 'EPS'],
         correctIndex: 2,
+        hint: '예금 이자처럼, 주식을 갖고 있으면 정기적으로 받는 돈이에요!',
         explanation: '배당금이에요! 주식을 갖고 있으면 회사 이익을 함께 나눠 받을 수 있어요. 🎁',
       },
       {
@@ -182,6 +198,7 @@ export const CHAPTERS = [
         question: 'PER을 구하는 공식은 무엇일까요?',
         options: ['주가 × 주당 이익', '주가 ÷ 주당 이익', '주가 + 주당 이익', '주당 이익 ÷ 주가'],
         correctIndex: 1,
+        hint: 'Price(주가) ÷ Earnings(이익). 주가를 이익으로 나누는 거예요!',
         explanation: 'PER = 주가 ÷ 주당 순이익! PER이 낮을수록 이익 대비 저렴한 주식이에요. 🧮',
       },
       {
@@ -189,6 +206,7 @@ export const CHAPTERS = [
         question: 'EPS(주당순이익)란 무엇일까요?',
         options: ['회사 전체 이익', '주식 한 장당 이익', '배당금 총액', '주주 수'],
         correctIndex: 1,
+        hint: '주당(主當) = 주식 "한 장" 기준. 한 장이 얼마나 이익을 냈나!',
         explanation: 'EPS = 주식 한 장이 얼마나 이익을 냈나! 회사 총이익 ÷ 주식 수 = EPS예요. 💡',
       },
       {
@@ -196,6 +214,7 @@ export const CHAPTERS = [
         question: 'PER이 낮다는 것은 무엇을 의미할까요?',
         options: ['회사가 적자다', '이익에 비해 주가가 비싸다', '이익에 비해 주가가 저렴하다', '배당금이 많다'],
         correctIndex: 2,
+        hint: 'PER = 주가 ÷ 이익. PER이 낮으면 이익에 비해 주가가 어떤 상태일까요?',
         explanation: 'PER 낮음 = 이익 대비 주가가 싸다 = 상대적으로 저렴한 주식! 단, 같은 업종끼리 비교해야 해요. 📊',
       },
     ],
