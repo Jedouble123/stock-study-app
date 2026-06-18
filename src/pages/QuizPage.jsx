@@ -1,46 +1,42 @@
 import { useState } from 'react';
-import { CHAPTER_COLORS } from '../data/chapters';
 import './QuizPage.css';
 
 const PASS_RATIO = 0.7;
 
 export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
-  const colors = CHAPTER_COLORS[chapter.color];
   const questions = chapter.quiz;
 
-  const [qIndex, setQIndex] = useState(0);
-  const [selected, setSelected] = useState(null);   // index of chosen option
-  const [answers, setAnswers] = useState([]);        // true/false per question
-  const [phase, setPhase] = useState('question');    // 'question' | 'result'
+  const [qIndex,   setQIndex]   = useState(0);
+  const [selected, setSelected] = useState(null);   // chosen option index
+  const [checked,  setChecked]  = useState(false);  // "확인" pressed
+  const [answers,  setAnswers]  = useState([]);
+  const [phase,    setPhase]    = useState('question'); // 'question' | 'result'
 
-  const currentQ = questions[qIndex];
-  const isAnswered = selected !== null;
-  const isCorrect = selected === currentQ?.correctIndex;
+  const currentQ  = questions[qIndex];
+  const isCorrect = checked && selected === currentQ?.correctIndex;
 
-  const handleSelect = (optIdx) => {
-    if (isAnswered) return;
-    setSelected(optIdx);
-  };
+  const handleSelect = (i) => { if (!checked) setSelected(i); };
+
+  const handleCheck = () => { if (selected === null || checked) return; setChecked(true); };
 
   const handleNext = () => {
     const newAnswers = [...answers, selected === currentQ.correctIndex];
     setAnswers(newAnswers);
-
     if (qIndex + 1 < questions.length) {
       setQIndex((q) => q + 1);
       setSelected(null);
+      setChecked(false);
     } else {
       setPhase('result');
     }
   };
 
-  const score = answers.filter(Boolean).length;
+  const score  = answers.filter(Boolean).length;
   const passed = phase === 'result' && score / questions.length >= PASS_RATIO;
 
   if (phase === 'result') {
     return <ResultScreen
       chapter={chapter}
-      colors={colors}
       score={score}
       total={questions.length}
       passed={passed}
@@ -49,128 +45,122 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
     />;
   }
 
+  const footerState = !checked ? 'idle' : isCorrect ? 'correct' : 'wrong';
+
   return (
     <div className="quiz-page">
-      {/* Header */}
-      <div className="quiz-header" style={{ '--ch-bg': colors.bg, '--ch-accent': colors.accent }}>
-        <button className="quiz-back-btn" onClick={onBack}>← 나가기</button>
-        <div className="quiz-meta">
-          <span className="quiz-label">퀴즈 · {chapter.emoji} {chapter.title}</span>
-          <span className="quiz-count">{qIndex + 1} / {questions.length}</span>
-        </div>
-        <div className="quiz-progress-track">
+      {/* Top bar */}
+      <div className="quiz-topbar">
+        <button className="quiz-close-btn" onClick={onBack}>✕</button>
+        <div className="quiz-bar-wrap">
           <div
-            className="quiz-progress-fill"
-            style={{ width: `${((qIndex + (isAnswered ? 1 : 0)) / questions.length) * 100}%`, background: colors.accent }}
+            className="quiz-bar-fill"
+            style={{ width: `${(qIndex / questions.length) * 100}%` }}
           />
+        </div>
+        <div className="quiz-lives">
+          {Array.from({ length: 3 }, (_, i) => (
+            <span key={i} className={`heart ${answers.filter(x => !x).length > i ? 'heart--lost' : ''}`}>❤️</span>
+          ))}
         </div>
       </div>
 
-      {/* Question */}
+      {/* Question body */}
       <div className="quiz-body">
-        <div className="question-num-badge" style={{ background: colors.bg, color: colors.text }}>
-          문제 {qIndex + 1}
-        </div>
-        <p className="question-text">{currentQ.question}</p>
+        <p className="quiz-q-num">문제 {qIndex + 1}/{questions.length}</p>
+        <p className="quiz-question">{currentQ.question}</p>
 
-        {/* Options */}
         <div className="options-list">
           {currentQ.options.map((opt, i) => {
-            let cls = 'option-btn';
-            if (isAnswered) {
-              if (i === currentQ.correctIndex) cls += ' option-btn--correct';
-              else if (i === selected) cls += ' option-btn--wrong';
-              else cls += ' option-btn--dim';
+            let mod = '';
+            if (checked) {
+              if (i === currentQ.correctIndex) mod = 'correct';
+              else if (i === selected)          mod = 'wrong';
+              else                               mod = 'dim';
             } else if (i === selected) {
-              cls += ' option-btn--selected';
+              mod = 'selected';
             }
             return (
-              <button key={i} className={cls} onClick={() => handleSelect(i)}>
+              <button
+                key={i}
+                className={`option-btn ${mod ? `option-btn--${mod}` : ''}`}
+                onClick={() => handleSelect(i)}
+                disabled={checked}
+              >
                 <span className="option-alpha">{String.fromCharCode(65 + i)}</span>
                 <span className="option-text">{opt}</span>
-                {isAnswered && i === currentQ.correctIndex && <span className="option-icon">✓</span>}
-                {isAnswered && i === selected && i !== currentQ.correctIndex && <span className="option-icon">✗</span>}
               </button>
             );
           })}
         </div>
+      </div>
 
-        {/* Explanation */}
-        {isAnswered && (
-          <div className={`explanation ${isCorrect ? 'explanation--correct' : 'explanation--wrong'}`}>
-            <p className="explanation-verdict">{isCorrect ? '🎉 정답이에요!' : '🥲 아쉬워요!'}</p>
-            <p className="explanation-text">{currentQ.explanation}</p>
+      {/* Duolingo-style dynamic footer */}
+      <div className={`quiz-footer quiz-footer--${footerState}`}>
+        {footerState === 'idle' ? (
+          <button
+            className={`quiz-check-btn ${selected !== null ? 'quiz-check-btn--active' : 'quiz-check-btn--disabled'}`}
+            onClick={handleCheck}
+            disabled={selected === null}
+          >
+            확인
+          </button>
+        ) : (
+          <div className="quiz-feedback-row">
+            <div className="quiz-feedback-text">
+              <p className="quiz-feedback-verdict">
+                {isCorrect ? '🎉 정답이에요!' : '🥲 아쉬워요!'}
+              </p>
+              <p className="quiz-feedback-explain">{currentQ.explanation}</p>
+            </div>
+            <button className={`quiz-next-btn quiz-next-btn--${footerState}`} onClick={handleNext}>
+              {qIndex + 1 < questions.length ? '다음 문제' : '결과 보기'}
+            </button>
           </div>
         )}
       </div>
-
-      {/* Next button */}
-      {isAnswered && (
-        <div className="quiz-footer">
-          <button
-            className="quiz-next-btn"
-            style={{ background: colors.accent }}
-            onClick={handleNext}
-          >
-            {qIndex + 1 < questions.length ? '다음 문제 →' : '결과 보기 →'}
-          </button>
-        </div>
-      )}
     </div>
   );
 }
 
-function ResultScreen({ chapter, colors, score, total, passed, onComplete, onRetry }) {
+function ResultScreen({ chapter, score, total, passed, onComplete, onRetry }) {
   const pct = Math.round((score / total) * 100);
-
   return (
     <div className="result-screen">
-      <div className="result-top" style={{ '--ch-bg': colors.bg }}>
-        <div className="result-icon">{passed ? '🎉' : '😅'}</div>
-        <h2 className="result-title">{passed ? '통과!' : '아쉬워요!'}</h2>
-        <p className="result-score-text">
-          <span className="result-score-num">{score}</span>
-          <span className="result-score-total"> / {total}</span>
+      <div className={`result-top ${passed ? 'result-top--pass' : 'result-top--fail'}`}>
+        <div className="result-icon">{passed ? '🏆' : '😅'}</div>
+        <h2 className="result-title">{passed ? '통과!' : '다시 도전!'}</h2>
+        <p className="result-subtitle">
+          {score}/{total} 정답 · {pct}%
         </p>
-        <div className="result-pct-bar">
+        <div className="result-bar-track">
           <div
-            className="result-pct-fill"
-            style={{ width: `${pct}%`, background: passed ? '#16a34a' : '#f59e0b' }}
+            className={`result-bar-fill ${passed ? 'result-bar-fill--pass' : 'result-bar-fill--fail'}`}
+            style={{ width: `${pct}%` }}
           />
         </div>
-        <p className="result-pct-label">{pct}% 정답</p>
       </div>
 
       <div className="result-body">
         {passed ? (
           <>
-            <div className="result-message result-message--pass">
-              <p>🌟 대단해요! <strong>{chapter.title}</strong> 챕터를 완료했어요!</p>
-              <p style={{ marginTop: '0.4rem', fontSize: '0.85rem', color: '#6b7280' }}>
-                다음 챕터가 열렸어요!
-              </p>
+            <div className="result-msg result-msg--pass">
+              <strong>🌟 {chapter.title}</strong> 챕터 완료!<br />
+              <span className="result-xp-badge">+100 XP 획득!</span>
             </div>
-            <button
-              className="result-btn result-btn--primary"
-              style={{ background: colors.accent }}
-              onClick={onComplete}
-            >
+            <button className="result-cta result-cta--pass" onClick={onComplete}>
               다음 챕터 가기 →
             </button>
           </>
         ) : (
           <>
-            <div className="result-message result-message--fail">
-              <p>70% 이상 맞혀야 통과예요.<br />한 번 더 도전해볼까요? 💪</p>
+            <div className="result-msg result-msg--fail">
+              70% 이상 맞혀야 통과예요.<br />한 번 더 해볼까요? 💪
             </div>
-            <button
-              className="result-btn result-btn--primary"
-              style={{ background: colors.accent }}
-              onClick={onRetry}
-            >
+            <button className="result-cta result-cta--retry" onClick={onRetry}>
               다시 도전하기
             </button>
-            <button className="result-btn result-btn--secondary" onClick={onRetry}>
+            <button className="result-cta result-cta--review" onClick={onRetry}>
               내용 다시 보기
             </button>
           </>

@@ -1,64 +1,72 @@
-import { CHAPTERS, CHAPTER_COLORS } from '../data/chapters';
+import { CHAPTERS } from '../data/chapters';
 import './ChapterMapPage.css';
 
 export default function ChapterMapPage({ progress, onStartChapter }) {
-  const completedCount = progress.completedChapters.size;
+  const completed = progress.completedChapters.size;
+  const total     = CHAPTERS.length;
+  const pct       = Math.round((completed / total) * 100);
 
   return (
     <div className="map-page">
       <div className="map-header">
-        <p className="map-greeting">주식 공부 여행 🗺️</p>
+        <p className="map-section-label">학습 진도</p>
         <h2 className="map-title">어디까지 왔을까요?</h2>
-        <div className="map-progress-pill">
-          {completedCount}/{CHAPTERS.length} 챕터 완료
+        <div className="map-progress-wrap">
+          <div className="map-progress-meta">
+            <span>{completed}/{total} 챕터 완료</span>
+            <span>{pct}%</span>
+          </div>
+          <div className="map-progress-track">
+            <div className="map-progress-fill" style={{ width: `${pct}%` }} />
+          </div>
         </div>
       </div>
 
       <div className="chapter-path">
         {CHAPTERS.map((chapter, idx) => {
-          const isUnlocked = progress.unlockedChapters.has(chapter.id);
+          const isUnlocked  = progress.unlockedChapters.has(chapter.id);
           const isCompleted = progress.completedChapters.has(chapter.id);
-          const isCurrent = isUnlocked && !isCompleted;
-          const colors = CHAPTER_COLORS[chapter.color];
+          const isCurrent   = isUnlocked && !isCompleted;
 
           return (
             <div key={chapter.id} className="path-item">
-              {/* Connector line */}
               {idx > 0 && (
-                <div className={`path-line ${isUnlocked ? 'path-line--active' : ''}`} />
+                <div className="path-connector">
+                  <div className={`path-line ${isUnlocked ? 'path-line--done' : ''}`} />
+                </div>
               )}
 
-              <div
-                className={`chapter-card ${isCompleted ? 'chapter-card--done' : ''} ${isCurrent ? 'chapter-card--current' : ''} ${!isUnlocked ? 'chapter-card--locked' : ''}`}
-                style={isUnlocked ? { '--ch-bg': colors.bg, '--ch-accent': colors.accent, '--ch-light': colors.light, '--ch-text': colors.text } : {}}
-              >
-                <div className="chapter-card__left">
-                  <div
-                    className="chapter-number"
-                    style={isUnlocked ? { background: colors.accent } : {}}
-                  >
-                    {isCompleted ? '✓' : chapter.number}
-                  </div>
-                  <div className="chapter-info">
-                    <span className="chapter-subtitle-badge">{chapter.subtitle}</span>
-                    <h3 className="chapter-title">
-                      {!isUnlocked && '🔒 '}
-                      {chapter.emoji} {chapter.title}
-                    </h3>
-                    <p className="chapter-desc">
-                      {isUnlocked ? chapter.description : '이전 챕터를 완료하면 열려요!'}
-                    </p>
-                  </div>
+              <div className={`chapter-card ${isCompleted ? 'chapter-card--done' : ''} ${isCurrent ? 'chapter-card--current' : ''} ${!isUnlocked ? 'chapter-card--locked' : ''}`}>
+                {/* Number */}
+                <div className={`chapter-num-circle ${isCompleted ? 'chapter-num-circle--done' : ''} ${isCurrent ? 'chapter-num-circle--current' : ''}`}>
+                  {isCompleted ? '✓' : chapter.emoji}
                 </div>
 
+                {/* Info */}
+                <div className="chapter-info">
+                  <span className="chapter-tag">{chapter.subtitle}</span>
+                  <h3 className="chapter-title">
+                    {!isUnlocked && '🔒 '}
+                    {chapter.title}
+                  </h3>
+                  <p className="chapter-desc">
+                    {isUnlocked ? chapter.description : '이전 챕터를 완료하면 열려요!'}
+                  </p>
+                </div>
+
+                {/* CTA */}
                 {isUnlocked && (
-                  <button
-                    className="chapter-btn"
-                    style={{ background: colors.accent }}
-                    onClick={() => onStartChapter(chapter.id)}
-                  >
-                    {isCompleted ? '복습' : isCurrent ? '시작 →' : '시작 →'}
-                  </button>
+                  <div className="chapter-cta">
+                    {isCompleted ? (
+                      <button className="chapter-review-btn" onClick={() => onStartChapter(chapter.id)}>
+                        복습
+                      </button>
+                    ) : (
+                      <button className="chapter-start-btn" onClick={() => onStartChapter(chapter.id)}>
+                        시작 →
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -66,9 +74,9 @@ export default function ChapterMapPage({ progress, onStartChapter }) {
         })}
       </div>
 
-      {completedCount === CHAPTERS.length && (
+      {completed === total && (
         <div className="all-done-banner">
-          🎓 모든 챕터를 완료했어요! 이제 진짜 주식 공부를 시작할 준비가 됐어요!
+          🎓 모든 챕터 완료! 이제 진짜 주식 공부를 시작할 준비가 됐어요!
         </div>
       )}
     </div>

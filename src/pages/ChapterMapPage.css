@@ -1,42 +1,65 @@
 .map-page {
-  padding: 1.5rem 1rem 4rem;
+  padding: 1.5rem 1rem 5rem;
   max-width: 600px;
   margin: 0 auto;
 }
 
+/* Header */
 .map-header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.map-greeting {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  margin-bottom: 0.2rem;
+.map-section-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 0.3rem;
 }
 
 .map-title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 900;
-  color: var(--color-text);
-  margin-bottom: 0.8rem;
+  color: var(--text);
+  margin-bottom: 0.9rem;
+  letter-spacing: -0.5px;
 }
 
-.map-progress-pill {
-  display: inline-block;
-  background: #fef3c7;
-  color: #92400e;
-  font-size: 0.8rem;
+/* Overall progress bar */
+.map-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.map-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.3rem 1rem;
-  border-radius: 20px;
+  color: var(--text-light);
 }
 
-/* Path layout */
+.map-progress-track {
+  height: 12px;
+  background: var(--gray-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.map-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 12px;
+  transition: width 0.5s ease;
+}
+
+/* Path */
 .chapter-path {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .path-item {
@@ -45,122 +68,150 @@
   align-items: stretch;
 }
 
-.path-line {
-  width: 3px;
+.path-connector {
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 27px;
   height: 24px;
-  background: #e5e7eb;
-  margin: 0 0 0 28px;
+  gap: 0;
 }
 
-.path-line--active {
-  background: linear-gradient(to bottom, #d1fae5, #fef3c7);
+.path-line {
+  width: 2px;
+  height: 24px;
+  background: var(--gray-300);
 }
+
+.path-line--done { background: var(--green); }
 
 /* Chapter card */
 .chapter-card {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  background: #fff;
-  border: 2px solid #f0ebe3;
-  border-radius: 20px;
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 16px;
   padding: 1rem 1rem 1rem 1.1rem;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .chapter-card--current {
-  border-color: var(--ch-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ch-accent) 15%, transparent);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(88, 204, 2, 0.12);
 }
 
 .chapter-card--done {
-  background: #f0fdf4;
-  border-color: #86efac;
+  border-color: var(--green);
+  background: #FAFFF5;
 }
 
 .chapter-card--locked {
-  opacity: 0.55;
-  background: #f9fafb;
+  opacity: 0.5;
+  background: var(--gray-100);
 }
 
-.chapter-card__left {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.8rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.chapter-number {
+/* Number circle */
+.chapter-num-circle {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #e5e7eb;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
+  font-size: 1rem;
+  font-weight: 900;
+  background: var(--gray-200);
+  color: var(--gray-700);
 }
 
-.chapter-info {
-  flex: 1;
-  min-width: 0;
+.chapter-num-circle--done {
+  background: var(--green);
+  color: var(--white);
+  font-size: 1.1rem;
 }
 
-.chapter-subtitle-badge {
+.chapter-num-circle--current {
+  background: var(--green-bg);
+  color: var(--green);
+  border: 2px solid var(--green);
+}
+
+/* Info */
+.chapter-info { flex: 1; min-width: 0; }
+
+.chapter-tag {
   font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  letter-spacing: 0.3px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-light);
   display: block;
   margin-bottom: 0.2rem;
 }
 
 .chapter-title {
-  font-size: 1rem;
+  font-size: 0.97rem;
   font-weight: 800;
-  color: var(--color-text);
-  margin-bottom: 0.3rem;
+  color: var(--text);
+  margin-bottom: 0.25rem;
   line-height: 1.3;
 }
 
 .chapter-desc {
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  color: var(--text-light);
   line-height: 1.5;
 }
 
-.chapter-btn {
+/* CTA */
+.chapter-cta {
   flex-shrink: 0;
-  padding: 0.5rem 1rem;
+}
+
+/* Duolingo-style pressed button */
+.chapter-start-btn {
+  padding: 0.55rem 1.1rem;
   border-radius: 12px;
   border: none;
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
+  background: var(--green);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 4px 0 var(--green-press);
+  transition: transform 0.08s, box-shadow 0.08s;
   white-space: nowrap;
 }
 
-.chapter-btn:hover {
-  opacity: 0.88;
-  transform: scale(1.03);
+.chapter-start-btn:hover { filter: brightness(1.05); }
+.chapter-start-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--green-press); }
+
+.chapter-review-btn {
+  padding: 0.55rem 1.1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 4px 0 var(--gray-300);
+  transition: transform 0.08s, box-shadow 0.08s;
+  white-space: nowrap;
 }
 
-/* All done */
+.chapter-review-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--gray-300); }
+
+/* All done banner */
 .all-done-banner {
   margin-top: 2rem;
-  background: linear-gradient(135deg, #fef3c7, #d1fae5);
+  background: var(--green-bg);
+  border: 2px solid var(--green);
   border-radius: 16px;
   padding: 1.2rem;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #374151;
+  font-weight: 700;
+  color: #166534;
   text-align: center;
   line-height: 1.6;
 }
