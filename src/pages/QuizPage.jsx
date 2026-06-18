@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { sounds } from '../utils/sounds';
 import './QuizPage.css';
 
 const PASS_RATIO = 0.7;
@@ -15,18 +16,30 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
   const currentQ  = questions[qIndex];
   const isCorrect = checked && selected === currentQ?.correctIndex;
 
-  const handleSelect = (i) => { if (!checked) setSelected(i); };
+  const handleSelect = (i) => {
+    if (checked) return;
+    sounds.click();
+    setSelected(i);
+  };
 
-  const handleCheck = () => { if (selected === null || checked) return; setChecked(true); };
+  const handleCheck = () => {
+    if (selected === null || checked) return;
+    setChecked(true);
+    if (selected === currentQ?.correctIndex) sounds.correct();
+    else sounds.wrong();
+  };
 
   const handleNext = () => {
     const newAnswers = [...answers, selected === currentQ.correctIndex];
     setAnswers(newAnswers);
     if (qIndex + 1 < questions.length) {
+      sounds.slide();
       setQIndex((q) => q + 1);
       setSelected(null);
       setChecked(false);
     } else {
+      const didPass = newAnswers.filter(Boolean).length / questions.length >= PASS_RATIO;
+      if (didPass) sounds.complete();
       setPhase('result');
     }
   };
@@ -125,6 +138,13 @@ export default function QuizPage({ chapter, onComplete, onRetry, onBack }) {
 
 function ResultScreen({ chapter, score, total, passed, onComplete, onRetry }) {
   const pct = Math.round((score / total) * 100);
+
+  useEffect(() => {
+    if (passed) {
+      const t = setTimeout(() => sounds.xp(), 750);
+      return () => clearTimeout(t);
+    }
+  }, [passed]);
   return (
     <div className="result-screen">
       <div className={`result-top ${passed ? 'result-top--pass' : 'result-top--fail'}`}>

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TERMS } from '../data/glossary';
+import { sounds } from '../utils/sounds';
 import './LearnPage.css';
 
 const termById = Object.fromEntries(TERMS.map((t) => [t.id, t]));
@@ -84,13 +85,18 @@ export default function LearnPage({ chapter, onStartQuiz, onBack }) {
   const [dir, setDir] = useState('next');
   const [animating, setAnimating] = useState(false);
 
+  useEffect(() => {
+    return () => sounds.stopBGM();
+  }, []);
+
   const pct = Math.round((slideIndex / (totalSlides - 1)) * 100);
   const isLastSlide = slideIndex === totalSlides - 1;
 
   const go = (delta) => {
     if (animating) return;
     const next = slideIndex + delta;
-    if (next < 0) { onBack(); return; }
+    if (next < 0) { sounds.click(); onBack(); return; }
+    sounds.slide();
     setDir(delta > 0 ? 'next' : 'prev');
     setAnimating(true);
     setTimeout(() => { setSlideIndex(next); setAnimating(false); }, 150);
@@ -123,7 +129,7 @@ export default function LearnPage({ chapter, onStartQuiz, onBack }) {
         {!isLastSlide ? (
           <button className="learn-next-btn" onClick={() => go(1)}>다음 →</button>
         ) : (
-          <button className="learn-next-btn" onClick={onStartQuiz}>퀴즈 시작! 🧩</button>
+          <button className="learn-next-btn" onClick={() => { sounds.quizStart(); onStartQuiz(); }}>퀴즈 시작! 🧩</button>
         )}
       </div>
     </div>

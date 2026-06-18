@@ -1,4 +1,5 @@
 import { CHAPTERS } from '../data/chapters';
+import { sounds } from '../utils/sounds';
 import './ChapterMapPage.css';
 
 export default function ChapterMapPage({ progress, onStartChapter }) {
@@ -58,11 +59,11 @@ export default function ChapterMapPage({ progress, onStartChapter }) {
                 {isUnlocked && (
                   <div className="chapter-cta">
                     {isCompleted ? (
-                      <button className="chapter-review-btn" onClick={() => onStartChapter(chapter.id)}>
+                      <button className="chapter-review-btn" onClick={() => { sounds.click(); onStartChapter(chapter.id); }}>
                         복습
                       </button>
                     ) : (
-                      <button className="chapter-start-btn" onClick={() => onStartChapter(chapter.id)}>
+                      <button className="chapter-start-btn" onClick={() => { sounds.click(); onStartChapter(chapter.id); }}>
                         시작 →
                       </button>
                     )}

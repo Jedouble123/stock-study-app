@@ -4,6 +4,7 @@ import ChapterMapPage from './pages/ChapterMapPage';
 import LearnPage from './pages/LearnPage';
 import QuizPage from './pages/QuizPage';
 import GlossaryPage from './pages/GlossaryPage';
+import { sounds } from './utils/sounds';
 import './styles/global.css';
 
 const FIRST_CHAPTER_ID = CHAPTERS[0].id;
@@ -54,16 +55,41 @@ export default function App() {
   const [activeChapterId, setActiveChapterId] = useState(null);
   const [tab, setTab] = useState('learn');
   const [progress, completeChapter] = useChapterProgress();
+  const [soundMuted, setSoundMuted] = useState(sounds.muted);
 
   const activeChapter = CHAPTERS.find((c) => c.id === activeChapterId);
   const xp = progress.completedChapters.size * XP_PER_CHAPTER;
 
-  const goToMap   = () => { setScreen('map'); setActiveChapterId(null); };
-  const startChapter = (id) => { setActiveChapterId(id); setScreen('learn'); };
-  const startQuiz = () => setScreen('quiz');
+  const toggleSound = () => {
+    const next = !soundMuted;
+    sounds.setMuted(next);
+    setSoundMuted(next);
+  };
 
-  const handleQuizComplete = () => { completeChapter(activeChapterId); goToMap(); };
-  const handleQuizRetry    = () => setScreen('learn');
+  const goToMap = () => { setScreen('map'); setActiveChapterId(null); };
+
+  const startChapter = (id) => {
+    sounds.startBGM();
+    setActiveChapterId(id);
+    setScreen('learn');
+  };
+
+  const startQuiz = () => {
+    sounds.stopBGM();
+    setScreen('quiz');
+  };
+
+  const handleQuizComplete = () => {
+    const idx = CHAPTERS.findIndex((c) => c.id === activeChapterId);
+    if (idx < CHAPTERS.length - 1) sounds.unlock();
+    completeChapter(activeChapterId);
+    goToMap();
+  };
+
+  const handleQuizRetry = () => {
+    sounds.startBGM();
+    setScreen('learn');
+  };
 
   if (screen === 'learn' && activeChapter)
     return <LearnPage chapter={activeChapter} onStartQuiz={startQuiz} onBack={goToMap} />;
@@ -84,13 +110,17 @@ export default function App() {
           )}
 
           <nav className="app-nav">
-            <button className={`nav-tab ${tab === 'learn' ? 'nav-tab--active' : ''}`} onClick={() => setTab('learn')}>
+            <button className={`nav-tab ${tab === 'learn' ? 'nav-tab--active' : ''}`} onClick={() => { sounds.click(); setTab('learn'); }}>
               🗺️ 챕터
             </button>
-            <button className={`nav-tab ${tab === 'glossary' ? 'nav-tab--active' : ''}`} onClick={() => setTab('glossary')}>
+            <button className={`nav-tab ${tab === 'glossary' ? 'nav-tab--active' : ''}`} onClick={() => { sounds.click(); setTab('glossary'); }}>
               📖 단어장
             </button>
           </nav>
+
+          <button className="sound-toggle" onClick={toggleSound} title={soundMuted ? '소리 켜기' : '소리 끄기'}>
+            {soundMuted ? '🔇' : '🔊'}
+          </button>
         </div>
       </header>
 

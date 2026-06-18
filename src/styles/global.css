@@ -127,6 +127,20 @@ a { text-decoration: none; }
 
 .app-main { flex: 1; }
 
+/* Sound toggle */
+.sound-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.1s;
+}
+.sound-toggle:active { transform: scale(0.88); }
+
 /* ─── Duolingo-style button primitives ──────── */
 .btn {
   display: inline-flex;
