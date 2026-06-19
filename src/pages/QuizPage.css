@@ -79,8 +79,8 @@
 
 .quiz-q-num {
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   color: var(--text-light);
 }
@@ -134,12 +134,12 @@
 
 /* ─── Question text ───────────────────────── */
 .quiz-question {
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: 1.12rem;
+  font-weight: 700;
   color: var(--text);
-  line-height: 1.55;
+  line-height: 1.65;
   margin-bottom: 1.4rem;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 /* ─── Options ─────────────────────────────── */
@@ -197,9 +197,10 @@
 .option-text {
   flex: 1;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
-  line-height: 1.4;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
 }
 
 /* ─── Dynamic footer ──────────────────────── */
@@ -226,9 +227,10 @@
   padding: 0.95rem;
   border-radius: 14px;
   border: none;
+  font-family: inherit;
   font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   transition: transform 0.08s, box-shadow 0.08s;
 }
 
@@ -264,16 +266,17 @@
 
 .quiz-feedback-verdict {
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 800;
   color: var(--text);
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 .quiz-feedback-explain {
   font-size: 0.85rem;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.7;
   font-weight: 500;
+  letter-spacing: -0.1px;
 }
 
 /* ─── Combo toast ─────────────────────────── */
@@ -302,10 +305,11 @@
   padding: 0.95rem;
   border-radius: 14px;
   border: none;
+  font-family: inherit;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 700;
   transition: transform 0.08s, box-shadow 0.08s;
-  letter-spacing: 0.3px;
+  letter-spacing: -0.2px;
 }
 
 .quiz-next-btn--correct {
@@ -375,18 +379,19 @@
 }
 
 .result-title {
-  font-size: 2.4rem;
-  font-weight: 900;
+  font-size: 2.2rem;
+  font-weight: 800;
   color: var(--text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
   margin-bottom: 0.4rem;
 }
 
 .result-subtitle {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-light);
   margin-bottom: 1.2rem;
+  letter-spacing: -0.2px;
 }
 
 .result-bar-track {
@@ -480,9 +485,10 @@
   padding: 1rem;
   border-radius: 14px;
   border: none;
+  font-family: inherit;
   font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.2px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   transition: transform 0.08s, box-shadow 0.08s;
   cursor: pointer;
 }
@@ -521,8 +527,8 @@
 
 .review-title {
   font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   color: var(--text-light);
   margin-bottom: 0.1rem;
@@ -577,4 +583,13 @@
   font-size: 0.75rem;
   color: #15803d;
   font-weight: 700;
+}
+
+.review-explanation {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 500;
+  line-height: 1.55;
+  margin-top: 0.45rem;
+  padding-left: 1.4rem;
 }

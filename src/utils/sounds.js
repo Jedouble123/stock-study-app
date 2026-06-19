@@ -1,14 +1,13 @@
 class SoundSystem {
   constructor() {
-    this.ctx     = null;
-    this.master  = null;
-    this.muted   = JSON.parse(localStorage.getItem('soundMuted') ?? 'false');
-    this.bgmOn   = false;
+    this.ctx      = null;
+    this.master   = null;
+    this.muted    = JSON.parse(localStorage.getItem('soundMuted') ?? 'false');
+    this.bgmOn    = false;
     this.bgmNodes = [];
     this.bgmTimer = null;
   }
 
-  /* ── init ──────────────────────────────────────── */
   _init() {
     if (this.ctx) {
       if (this.ctx.state === 'suspended') this.ctx.resume();
@@ -16,32 +15,29 @@ class SoundSystem {
     }
     this.ctx    = new (window.AudioContext || window.webkitAudioContext)();
     this.master = this.ctx.createGain();
-    this.master.gain.value = this.muted ? 0 : 0.55;
+    this.master.gain.value = this.muted ? 0 : 0.6;
     this.master.connect(this.ctx.destination);
   }
 
   setMuted(m) {
     this.muted = m;
     localStorage.setItem('soundMuted', JSON.stringify(m));
-    if (this.master) this.master.gain.value = m ? 0 : 0.55;
+    if (this.master) this.master.gain.value = m ? 0 : 0.6;
   }
 
-  /* ── helpers ───────────────────────────────────── */
-  _note(freq, type, t, dur, peak = 0.18) {
+  _note(freq, type, t, dur, peak = 0.2) {
     const osc  = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = type;
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(peak, t + Math.min(0.025, dur * 0.15));
+    gain.gain.linearRampToValueAtTime(peak, t + 0.01);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.connect(gain);
-    gain.connect(this.master);
-    osc.start(t);
-    osc.stop(t + dur + 0.01);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t + dur + 0.02);
   }
 
-  _sweep(f0, f1, type, t, dur, peak = 0.12) {
+  _sweep(f0, f1, type, t, dur, peak = 0.14) {
     const osc  = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = type;
@@ -49,90 +45,78 @@ class SoundSystem {
     osc.frequency.linearRampToValueAtTime(f1, t + dur);
     gain.gain.setValueAtTime(peak, t);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.connect(gain);
-    gain.connect(this.master);
-    osc.start(t);
-    osc.stop(t + dur + 0.01);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(t); osc.stop(t + dur + 0.02);
   }
 
-  /* ── sound effects ─────────────────────────────── */
+  /* ── 경쾌한 탭 소리 ── */
   click() {
     this._init();
     const t = this.ctx.currentTime;
-    this._note(700, 'sine', t, 0.07, 0.14);
+    this._note(1200, 'sine', t, 0.06, 0.18);
+    this._note(1600, 'sine', t + 0.02, 0.04, 0.08);
   }
 
+  /* ── 슬라이드 전환 ── */
   slide() {
     this._init();
     const t = this.ctx.currentTime;
-    this._sweep(380, 560, 'sine', t, 0.12, 0.10);
+    this._sweep(600, 1000, 'sine', t, 0.09, 0.12);
   }
 
-  /* Duolingo-style two-note ding */
+  /* ── 정답 — 밝고 경쾌한 3음 ── */
   correct() {
     this._init();
     const t = this.ctx.currentTime;
-    this._note(523, 'sine', t,        0.28, 0.20); // C5
-    this._note(659, 'sine', t + 0.15, 0.38, 0.20); // E5
+    this._note(523,  'sine', t,        0.15, 0.22); // C5
+    this._note(659,  'sine', t + 0.1,  0.15, 0.22); // E5
+    this._note(784,  'sine', t + 0.2,  0.25, 0.22); // G5
   }
 
-  /* Low descending buzz */
+  /* ── 오답 — 짧고 부드러운 버즈 ── */
   wrong() {
     this._init();
     const t = this.ctx.currentTime;
-    const osc    = this.ctx.createOscillator();
-    const gain   = this.ctx.createGain();
-    const filter = this.ctx.createBiquadFilter();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(260, t);
-    osc.frequency.linearRampToValueAtTime(180, t + 0.4);
-    filter.type = 'lowpass';
-    filter.frequency.value = 480;
-    gain.gain.setValueAtTime(0.13, t);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.42);
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.master);
-    osc.start(t);
-    osc.stop(t + 0.44);
+    this._sweep(320, 220, 'triangle', t, 0.25, 0.16);
   }
 
-  /* Victory fanfare */
+  /* ── 완료 팡파레 ── */
   complete() {
     this._init();
     const t = this.ctx.currentTime;
-    [523, 659, 784, 1047].forEach((f, i) => {
-      this._note(f, 'sine', t + i * 0.13, 0.5, 0.22);
+    [523, 659, 784, 1047, 1319].forEach((f, i) => {
+      this._note(f, 'sine', t + i * 0.1, 0.4, 0.2);
     });
   }
 
-  /* Ascending arpeggio — chapter unlock */
+  /* ── 챕터 잠금 해제 ── */
   unlock() {
     this._init();
     const t = this.ctx.currentTime;
-    [261, 329, 392, 523, 659].forEach((f, i) => {
-      this._note(f, 'triangle', t + i * 0.09, 0.32, 0.15);
+    [392, 494, 587, 784, 988].forEach((f, i) => {
+      this._note(f, 'triangle', t + i * 0.08, 0.28, 0.16);
     });
   }
 
-  /* Coin ping — XP gain */
+  /* ── XP 획득 코인 ── */
   xp() {
     this._init();
     const t = this.ctx.currentTime;
-    this._note(880,  'sine', t,        0.18, 0.14);
-    this._note(1320, 'sine', t + 0.08, 0.22, 0.11);
+    this._note(988,  'sine', t,        0.12, 0.16);
+    this._note(1319, 'sine', t + 0.07, 0.18, 0.13);
+    this._note(1568, 'sine', t + 0.13, 0.14, 0.10);
   }
 
-  /* Quiz start jingle */
+  /* ── 퀴즈 시작 ── */
   quizStart() {
     this._init();
     const t = this.ctx.currentTime;
-    [392, 523, 659].forEach((f, i) => {
-      this._note(f, 'sine', t + i * 0.1, 0.3, 0.14);
+    [440, 554, 659, 880].forEach((f, i) => {
+      this._note(f, 'sine', t + i * 0.09, 0.22, 0.16);
     });
   }
 
-  /* ── Background music ──────────────────────────── */
+  /* ── BGM — 경쾌한 C장조 멜로디 ── */
   startBGM() {
     this._init();
     if (this.bgmOn) return;
@@ -142,66 +126,53 @@ class SoundSystem {
 
   _loopBGM(start) {
     if (!this.bgmOn) return;
-    const bpm  = 88;
+    const bpm  = 110;
     const beat = 60 / bpm;
 
-    // C major pentatonic melody: [freq, startBeat, durationBeats]
+    // 밝고 경쾌한 C장조 멜로디
     const melody = [
-      [261.6, 0,    1.0],
-      [329.6, 1.5,  0.5],
-      [392.0, 2.5,  1.0],
-      [440.0, 4.0,  0.5],
-      [392.0, 5.0,  0.5],
-      [329.6, 6.0,  0.5],
-      [261.6, 7.0,  1.5],
-      [329.6, 9.0,  0.5],
-      [392.0, 10.0, 1.0],
-      [523.0, 11.5, 0.5],
-      [392.0, 12.5, 0.5],
-      [261.6, 13.0, 2.0],
+      [523, 0,    0.75], [659, 1,    0.5],  [784, 1.5,  0.5],
+      [880, 2,    1.0],  [784, 3,    0.5],  [659, 3.5,  0.5],
+      [523, 4,    0.75], [587, 5,    0.5],  [659, 5.5,  0.5],
+      [784, 6,    1.5],  [659, 8,    0.5],  [784, 8.5,  0.5],
+      [880, 9,    0.75], [988, 10,   0.5],  [880, 10.5, 0.5],
+      [784, 11,   0.75], [659, 12,   0.5],  [523, 12.5, 1.5],
     ];
 
-    const loopBeats = 15;
+    const loopBeats = 14;
 
     melody.forEach(([freq, b, dur]) => {
       const osc  = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
+      const t    = start + b * beat;
       osc.type = 'triangle';
       osc.frequency.value = freq;
-      const t = start + b * beat;
       gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.032, t + 0.07);
-      gain.gain.setValueAtTime(0.032, t + dur * beat - 0.07);
+      gain.gain.linearRampToValueAtTime(0.028, t + 0.05);
+      gain.gain.setValueAtTime(0.028, t + dur * beat - 0.06);
       gain.gain.linearRampToValueAtTime(0, t + dur * beat);
-      osc.connect(gain);
-      gain.connect(this.master);
-      osc.start(t);
-      osc.stop(t + dur * beat + 0.1);
+      osc.connect(gain); gain.connect(this.master);
+      osc.start(t); osc.stop(t + dur * beat + 0.1);
       this.bgmNodes.push(osc);
     });
 
-    // Bass pad – C3 drone
-    const bass      = this.ctx.createOscillator();
-    const bassGain  = this.ctx.createGain();
-    const bassFilter = this.ctx.createBiquadFilter();
+    // 베이스 C2
+    const bass = this.ctx.createOscillator();
+    const bg   = this.ctx.createGain();
+    const bf   = this.ctx.createBiquadFilter();
     bass.type = 'sine';
     bass.frequency.value = 130.8;
-    bassFilter.type = 'lowpass';
-    bassFilter.frequency.value = 280;
-    bassGain.gain.setValueAtTime(0, start);
-    bassGain.gain.linearRampToValueAtTime(0.045, start + 0.6);
-    bassGain.gain.setValueAtTime(0.045, start + (loopBeats - 1) * beat);
-    bassGain.gain.linearRampToValueAtTime(0, start + loopBeats * beat);
-    bass.connect(bassFilter);
-    bassFilter.connect(bassGain);
-    bassGain.connect(this.master);
-    bass.start(start);
-    bass.stop(start + loopBeats * beat + 0.1);
+    bf.type = 'lowpass'; bf.frequency.value = 300;
+    bg.gain.setValueAtTime(0, start);
+    bg.gain.linearRampToValueAtTime(0.04, start + 0.4);
+    bg.gain.setValueAtTime(0.04, start + (loopBeats - 1) * beat);
+    bg.gain.linearRampToValueAtTime(0, start + loopBeats * beat);
+    bass.connect(bf); bf.connect(bg); bg.connect(this.master);
+    bass.start(start); bass.stop(start + loopBeats * beat + 0.1);
     this.bgmNodes.push(bass);
 
-    // Schedule next iteration
     const loopMs = loopBeats * beat * 1000;
-    this.bgmTimer = setTimeout(() => this._loopBGM(start + loopBeats * beat), loopMs - 180);
+    this.bgmTimer = setTimeout(() => this._loopBGM(start + loopBeats * beat), loopMs - 150);
   }
 
   stopBGM() {

@@ -91,13 +91,17 @@ export default function App() {
     setScreen('learn');
   };
 
+  /* Full-screen pages (no header/bottom-nav) */
   if (screen === 'learn' && activeChapter)
     return <LearnPage chapter={activeChapter} onStartQuiz={startQuiz} onBack={goToMap} />;
   if (screen === 'quiz' && activeChapter)
     return <QuizPage chapter={activeChapter} onComplete={handleQuizComplete} onRetry={handleQuizRetry} onBack={() => setScreen('learn')} />;
 
+  const switchTab = (t) => { sounds.click(); setTab(t); };
+
   return (
     <div className="app">
+      <div className="bg-chart" aria-hidden="true" />
       <header className="app-header">
         <div className="app-header__inner">
           <div className="app-logo">
@@ -105,18 +109,7 @@ export default function App() {
             <span className="app-logo__title">주식 공부</span>
           </div>
 
-          {xp > 0 && (
-            <div className="header-xp">⚡ {xp} XP</div>
-          )}
-
-          <nav className="app-nav">
-            <button className={`nav-tab ${tab === 'learn' ? 'nav-tab--active' : ''}`} onClick={() => { sounds.click(); setTab('learn'); }}>
-              🗺️ 챕터
-            </button>
-            <button className={`nav-tab ${tab === 'glossary' ? 'nav-tab--active' : ''}`} onClick={() => { sounds.click(); setTab('glossary'); }}>
-              📖 단어장
-            </button>
-          </nav>
+          {xp > 0 && <div className="header-xp">⚡ {xp} XP</div>}
 
           <button className="sound-toggle" onClick={toggleSound} title={soundMuted ? '소리 켜기' : '소리 끄기'}>
             {soundMuted ? '🔇' : '🔊'}
@@ -129,6 +122,17 @@ export default function App() {
           ? <ChapterMapPage progress={progress} onStartChapter={startChapter} />
           : <GlossaryPage />}
       </main>
+
+      <nav className="bottom-nav">
+        <button className={`bottom-nav-btn ${tab === 'learn' ? 'bottom-nav-btn--active' : ''}`} onClick={() => switchTab('learn')}>
+          <span className="bottom-nav-icon">🗺️</span>
+          <span className="bottom-nav-label">학습</span>
+        </button>
+        <button className={`bottom-nav-btn ${tab === 'glossary' ? 'bottom-nav-btn--active' : ''}`} onClick={() => switchTab('glossary')}>
+          <span className="bottom-nav-icon">📖</span>
+          <span className="bottom-nav-label">주식사전</span>
+        </button>
+      </nav>
     </div>
   );
 }

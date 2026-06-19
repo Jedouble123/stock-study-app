@@ -26,15 +26,15 @@
 
 .progress-label {
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.2px;
   color: var(--text-light);
 }
 
 .progress-count {
   font-size: 0.82rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--green);
 }
 
@@ -82,10 +82,12 @@
   flex: 1;
   border: none;
   outline: none;
+  font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
   background: transparent;
+  letter-spacing: -0.2px;
 }
 
 .search-input::placeholder { color: var(--gray-400); }

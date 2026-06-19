@@ -30,53 +30,143 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
-    'Noto Sans KR', 'Segoe UI', sans-serif;
-  background: var(--gray-100);
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  background: #d0d0d0;
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #ffffff;
+  position: relative;
+  overflow-x: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,0.18);
+}
+
+/* ── 소프트 blob 배경 ─────────────────────────── */
+.bg-chart {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(430px, 100vw);
+  height: 100svh;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(60px);
+  opacity: 0.72;
+  background:
+    radial-gradient(circle 220px at -8%  4%,  #86efac 0%, transparent 100%),
+    radial-gradient(circle 180px at 108% 8%,  #93c5fd 0%, transparent 100%),
+    radial-gradient(circle 200px at 50%  102%,#fde047 0%, transparent 100%),
+    radial-gradient(circle 150px at -8%  62%, #fed7aa 0%, transparent 100%),
+    radial-gradient(circle 170px at 110% 55%, #ddd6fe 0%, transparent 100%),
+    radial-gradient(circle 120px at 80%  28%, #fca5a5 0%, transparent 100%),
+    radial-gradient(circle 100px at 20%  40%, #a5f3fc 0%, transparent 100%);
 }
 
 button { font-family: inherit; cursor: pointer; }
 a { text-decoration: none; }
 
 /* ─── App shell ───────────────────────────────── */
-.app { min-height: 100vh; display: flex; flex-direction: column; }
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 64px;
+  position: relative;
+  z-index: 1;
+}
 
 .app-header {
-  background: var(--white);
-  border-bottom: 2px solid var(--border);
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1.5px solid rgba(0,0,0,0.07);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
 .app-header__inner {
-  max-width: 680px;
-  margin: 0 auto;
   padding: 0 1rem;
-  height: 56px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
 }
+
+/* ─── Bottom nav ──────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 64px;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1.5px solid rgba(0,0,0,0.07);
+  display: flex;
+  z-index: 100;
+}
+
+.bottom-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: background 0.1s;
+}
+
+.bottom-nav-btn:active { background: var(--gray-100); }
+
+.bottom-nav-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.bottom-nav-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  letter-spacing: 0.2px;
+}
+
+.bottom-nav-btn--active .bottom-nav-label { color: var(--green); }
+.bottom-nav-btn--active .bottom-nav-icon  { filter: none; }
 
 /* Logo */
 .app-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
-.app-logo__icon { font-size: 1.6rem; }
+.app-logo__icon { font-size: 1.5rem; }
 
 .app-logo__title {
-  font-size: 1.1rem;
-  font-weight: 900;
+  font-size: 1.05rem;
+  font-weight: 800;
   color: var(--green);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
 }
 
 .app-logo__sub {
@@ -93,10 +183,11 @@ a { text-decoration: none; }
   background: var(--gold-bg);
   border: 2px solid var(--gold);
   border-radius: 20px;
-  padding: 0.2rem 0.7rem;
-  font-size: 0.8rem;
-  font-weight: 800;
+  padding: 0.18rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   color: #92400e;
+  letter-spacing: -0.3px;
 }
 
 /* Nav tabs */
@@ -149,12 +240,13 @@ a { text-decoration: none; }
   gap: 0.4rem;
   border: none;
   border-radius: 14px;
-  font-weight: 800;
+  font-family: inherit;
+  font-weight: 700;
   font-size: 0.95rem;
   padding: 0.85rem 1.4rem;
   transition: transform 0.08s, box-shadow 0.08s;
   cursor: pointer;
-  letter-spacing: 0.2px;
+  letter-spacing: -0.2px;
 }
 
 /* Press effect: bottom shadow acts as 3-D border */

@@ -54,7 +54,7 @@
 
 .learn-count {
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text-light);
   flex-shrink: 0;
   min-width: 32px;
@@ -96,28 +96,31 @@
 
 .intro-chapter-label {
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1.2px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
   text-transform: uppercase;
   color: var(--green);
   margin-bottom: 0.4rem;
 }
 
 .intro-title {
-  font-size: 1.9rem;
-  font-weight: 900;
+  font-size: 1.8rem;
+  font-weight: 800;
   color: var(--text);
   margin-bottom: 0.8rem;
-  letter-spacing: -0.5px;
-  line-height: 1.2;
+  letter-spacing: -0.6px;
+  line-height: 1.25;
+  word-break: keep-all;
 }
 
 .intro-desc {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--text-light);
-  line-height: 1.7;
+  line-height: 1.75;
   max-width: 320px;
   margin-bottom: 1.8rem;
+  letter-spacing: -0.2px;
+  word-break: keep-all;
 }
 
 .intro-terms-row {
@@ -154,10 +157,10 @@
 }
 
 .term-slide-name {
-  font-size: 2.2rem;
-  font-weight: 900;
+  font-size: 2rem;
+  font-weight: 800;
   color: var(--text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
   margin-bottom: 0.2rem;
 }
 
@@ -187,8 +190,8 @@
 
 .story-label {
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   color: #92400e;
   margin-bottom: 0.7rem;
@@ -199,11 +202,13 @@
 .story-p {
   font-size: 0.88rem;
   color: var(--text);
-  line-height: 1.8;
+  line-height: 1.85;
   white-space: pre-wrap;
+  letter-spacing: -0.1px;
+  word-break: keep-all;
 }
 
-.story-p strong { color: #d97706; font-weight: 800; }
+.story-p strong { color: #d97706; font-weight: 700; }
 
 /* Analogy */
 .analogy-row {
@@ -230,8 +235,8 @@
 
 .keypoints-label {
   font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   color: var(--text-light);
   margin-bottom: 0.55rem;
@@ -244,8 +249,10 @@
   color: var(--text);
   padding-left: 1.1rem;
   position: relative;
-  line-height: 1.5;
-  font-weight: 600;
+  line-height: 1.65;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  word-break: keep-all;
 }
 
 .keypoints li::before {
@@ -253,7 +260,7 @@
   position: absolute;
   left: 0;
   color: var(--green);
-  font-weight: 900;
+  font-weight: 700;
 }
 
 /* ─── Quiz transition slide ───────────────── */
@@ -275,17 +282,20 @@
 }
 
 .transition-title {
-  font-size: 2rem;
-  font-weight: 900;
+  font-size: 1.85rem;
+  font-weight: 800;
   color: var(--text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
   margin-bottom: 0.8rem;
+  word-break: keep-all;
 }
 
 .transition-desc {
-  font-size: 1rem;
+  font-size: 0.98rem;
   color: var(--text-light);
   line-height: 1.8;
+  letter-spacing: -0.2px;
+  word-break: keep-all;
 }
 
 .transition-desc strong { color: var(--text); }
@@ -319,8 +329,10 @@
   border: 2px solid var(--border);
   background: var(--white);
   color: var(--text-light);
+  font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: -0.2px;
   box-shadow: 0 4px 0 var(--gray-300);
   transition: transform 0.08s, box-shadow 0.08s;
 }
@@ -334,8 +346,10 @@
   border: none;
   background: var(--green);
   color: var(--white);
+  font-family: inherit;
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   box-shadow: 0 4px 0 var(--green-press);
   transition: transform 0.08s, box-shadow 0.08s;
 }

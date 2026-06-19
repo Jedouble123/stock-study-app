@@ -12,9 +12,7 @@
 /* ── Instagram Stories progress bars ─────────────── */
 .sv-bars {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 20;
   display: flex;
   gap: 4px;
@@ -25,18 +23,15 @@
   flex: 1;
   height: 3px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255,255,255,0.35);
 }
-
-.sv-bar--done   { background: rgba(255, 255, 255, 0.85); }
+.sv-bar--done   { background: rgba(255,255,255,0.85); }
 .sv-bar--active { background: #fff; }
 
 /* ── Header ──────────────────────────────────────── */
 .sv-header {
   position: absolute;
-  top: 22px;
-  left: 0;
-  right: 0;
+  top: 22px; left: 0; right: 0;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -44,76 +39,46 @@
   padding: 0 12px;
 }
 
-.sv-term-info {
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  flex: 1;
-}
+.sv-term-info { display: flex; align-items: baseline; gap: 0.4rem; flex: 1; }
 
 .sv-term-name {
-  font-size: 0.95rem;
-  font-weight: 900;
-  color: #fff;
+  font-size: 0.95rem; font-weight: 700; color: #fff;
+  letter-spacing: -0.2px;
   text-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
-
 .sv-term-en {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.8);
+  font-size: 0.7rem; font-weight: 500; color: rgba(255,255,255,0.8);
   text-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
-
 .sv-term-pos {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: rgba(255,255,255,0.8);
+  font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.8);
   text-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .sv-close {
-  background: rgba(0,0,0,0.18);
-  border: none;
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-size: 0.75rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  flex-shrink: 0;
+  background: rgba(0,0,0,0.18); border: none; color: #fff;
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 0.75rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px); flex-shrink: 0;
 }
 
-/* ── Scene / image area ──────────────────────────── */
+/* ── Scene ───────────────────────────────────────── */
 .sv-scene-placeholder {
   width: 100%;
-  /* ~55% of typical mobile viewport */
-  height: 52vw;
-  max-height: 320px;
-  min-height: 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 52vw; max-height: 280px; min-height: 200px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 
 .sv-scene-img {
   width: 100%;
-  height: 52vw;
-  max-height: 320px;
-  min-height: 220px;
-  object-fit: cover;
-  flex-shrink: 0;
+  height: 52vw; max-height: 280px; min-height: 200px;
+  object-fit: cover; flex-shrink: 0;
 }
 
 .sv-visual {
-  font-size: 4.5rem;
-  line-height: 1;
-  letter-spacing: 6px;
+  font-size: 4.5rem; line-height: 1; letter-spacing: 6px;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
   animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -123,122 +88,413 @@
   to   { transform: scale(1);   opacity: 1; }
 }
 
-/* ── Text content area ───────────────────────────── */
+/* ── Text content ────────────────────────────────── */
 .sv-content {
   flex: 1;
-  padding: 1.1rem 1.2rem 0.5rem;
+  padding: 1rem 1.1rem 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.75rem;
   overflow-y: auto;
 }
 
 .sv-text {
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: 1.05rem;
+  font-weight: 600;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.75;
   white-space: pre-line;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
 }
 
-/* ── Real-world hint ─────────────────────────────── */
-.sv-rw {
-  background: var(--gray-100);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 0.7rem 0.85rem;
+/* ─────────────────────────────────────────────────
+   MTS Screenshot — 실제 증권 앱처럼 보이는 컴포넌트
+───────────────────────────────────────────────── */
+.mts-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.4rem;
 }
 
-.sv-rw-label {
+.mts-label {
   font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.4px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
   color: var(--text-light);
 }
 
-.sv-rw-desc {
-  font-size: 0.72rem;
-  color: var(--text-light);
-  font-weight: 600;
-  line-height: 1.4;
+.mts-frame {
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* ── Mockup styles ───────────────────────────────── */
-.rwm {
-  border-radius: 8px;
-  padding: 0.55rem 0.7rem;
+.mts-screen {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.78rem;
+}
+
+.mts-topbar {
+  background: #1a1f2e;
+  color: #f1f5f9;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mts-code {
+  font-size: 0.62rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.mts-divider { height: 1px; background: #f0f0f0; }
+
+.mts-stock-row {
+  padding: 0.55rem 0.8rem;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
 
-.rwm--dark { background: #1a1f2e; }
+.mts-stock-row--dim { opacity: 0.5; }
 
-.rwm-row {
+.mts-row-main {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  color: #e2e8f0;
-  font-weight: 600;
+  align-items: center;
 }
 
-.rwm-bold  { font-weight: 800; color: #f8fafc; }
-.rwm-dim   { color: #94a3b8; font-size: 0.65rem; }
-.rwm-val   { color: #f8fafc; font-weight: 700; }
-.rwm-green { color: #4ade80; font-weight: 700; }
-.rwm-red   { color: #f87171; font-weight: 700; }
+.mts-name { font-weight: 700; color: #1e293b; font-size: 0.8rem; }
+.mts-qty  { font-size: 0.7rem; color: #64748b; }
+.mts-val  { font-weight: 700; color: #1e293b; }
+.mts-dim  { color: #94a3b8; font-size: 0.7rem; }
 
-.rwm-badge {
+/* 한국 증권 앱 컨벤션: 상승=빨강, 하락=파랑 */
+.mts-up   { color: #dc2626; font-weight: 700; }
+.mts-down { color: #2563eb; font-weight: 700; }
+.mts-up--lg   { font-size: 0.85rem; font-weight: 800; }
+
+/* ── Highlight box with pulsing animation ── */
+.mts-highlight-box {
+  position: relative;
+  border: 2px solid #f97316;
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  margin: 0.3rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: #fff7ed;
+}
+
+.mts-highlight-box--price {
+  background: #fff7ed;
+  padding: 0.55rem 0.8rem;
+}
+
+.mts-highlight-box--badge {
+  flex-direction: row;
+  align-items: center;
+  padding: 0.2rem 0.4rem;
+  margin: 0;
+  background: #fff7ed;
+}
+
+.mts-highlight-box--order {
+  margin: 0.4rem 0.8rem;
+  background: #fff7ed;
+  padding: 0.5rem;
+}
+
+.mts-highlight-box--index {
+  background: #fff7ed;
+  margin: 0.4rem 0.8rem;
+}
+
+.mts-highlight-box--chart {
+  background: #0f172a;
+  padding: 0.5rem 0.65rem 0.3rem;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-top: 2px solid #f97316;
+  border-bottom: 2px solid #f97316;
+}
+
+.mts-highlight-box--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  margin: 0.2rem 0;
+  background: #fff7ed;
+}
+
+/* Pulsing orange glow */
+.mts-hl-pulse {
+  position: absolute;
+  inset: -3px;
+  border-radius: 9px;
+  border: 2px solid #f97316;
+  animation: hl-pulse 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hl-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(249,115,22,0.4); }
+  50%       { opacity: 0.6; box-shadow: 0 0 0 5px rgba(249,115,22,0); }
+}
+
+/* Price display */
+.mts-big-price {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1;
+}
+.mts-unit { font-size: 0.75rem; font-weight: 600; margin-left: 2px; }
+
+.mts-hl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+}
+.mts-hl-row--center { justify-content: center; }
+
+/* Info row */
+.mts-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.68rem;
+  color: #64748b;
+  gap: 0.3rem;
+}
+
+/* Exchange badge */
+.mts-badge {
   font-size: 0.6rem;
   font-weight: 800;
-  padding: 1px 6px;
+  padding: 2px 6px;
   border-radius: 4px;
   letter-spacing: 0.3px;
 }
+.mts-badge--red  { background: #dc2626; color: #fff; }
+.mts-badge--blue { background: #2563eb; color: #fff; }
 
-.rwm-badge--blue { background: #1d4ed8; color: #fff; }
-.rwm-badge--red  { background: #dc2626; color: #fff; }
+/* Search items */
+.mts-search-item {
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
 
-.rwm-btn {
+/* Dividend */
+.mts-div-item {
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Order */
+.mts-order-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+}
+.mts-order-qty {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+}
+.mts-qty-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mts-qty-btn { font-size: 0.9rem; color: #64748b; font-weight: 700; }
+.mts-qty-val { font-weight: 800; font-size: 0.82rem; color: #1e293b; }
+.mts-order-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+.mts-order-btn {
   flex: 1;
-  padding: 4px 0;
+  padding: 0.45rem 0;
   border: none;
-  border-radius: 5px;
-  font-size: 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
   font-weight: 800;
   cursor: default;
 }
+.mts-order-btn--buy  { background: #dc2626; color: #fff; }
+.mts-order-btn--sell { background: #2563eb; color: #fff; }
 
-.rwm-btn--buy  { background: #dc2626; color: #fff; }
-.rwm-btn--sell { background: #2563eb; color: #fff; }
-
-/* Mini candlestick chart */
-.rwm--chart { gap: 0; }
-
-.rwm-candles {
+/* Market cap */
+.mts-rank-item {
   display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 50px;
-  padding: 0 2px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+}
+.mts-rank-item--top { background: #f8fafc; }
+.mts-rank-no {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #94a3b8;
+  width: 16px;
+  flex-shrink: 0;
+}
+.mts-rank-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.rwm-candle {
+/* Index */
+.mts-index-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.76rem;
+}
+.mts-index-name { font-weight: 700; color: #1e293b; min-width: 56px; }
+.mts-index-val  { flex: 1; font-weight: 700; color: #1e293b; }
+
+/* Chart */
+.mts-price-mini {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+}
+.mts-candles {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 56px;
+  padding: 0 2px 2px;
+}
+.mts-candle-wrap {
   flex: 1;
-  border-radius: 2px;
-  min-width: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.mts-wick { width: 2px; min-height: 3px; border-radius: 1px; }
+.mts-candle-body { width: 100%; border-radius: 2px; min-height: 4px; }
+.mts-chart-label { padding: 0.2rem 0.5rem 0.35rem; }
+
+/* Info grid */
+.mts-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0.3rem 0.6rem;
+  gap: 0.2rem;
+}
+.mts-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0.3rem;
+  font-size: 0.72rem;
+}
+
+/* desc */
+.mts-desc {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────
+   DeepDive — 더보기 섹션
+───────────────────────────────────────────────── */
+.deepdive {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.deepdive-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--gray-100);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+  color: var(--text);
+  text-align: left;
+}
+
+.deepdive-icon { font-size: 0.6rem; color: var(--green); flex-shrink: 0; }
+
+.deepdive-body {
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--white);
+  animation: deepdive-open 0.18s ease;
+}
+
+@keyframes deepdive-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.deepdive-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-left: 0.6rem;
+  border-left: 3px solid var(--green);
+}
+
+.deepdive-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.deepdive-desc {
+  font-size: 0.73rem;
+  color: var(--text-light);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.1px;
+  word-break: keep-all;
 }
 
 /* ── Bottom nav ──────────────────────────────────── */
 .sv-nav {
-  padding: 0.8rem 1rem;
+  padding: 0.7rem 1rem;
   display: flex;
   gap: 0.6rem;
   background: var(--white);
@@ -254,12 +510,13 @@
   border: 2px solid var(--border);
   background: var(--white);
   color: var(--text-light);
+  font-family: inherit;
   font-size: 0.85rem;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: -0.2px;
   box-shadow: 0 3px 0 var(--gray-300);
   transition: transform 0.08s, box-shadow 0.08s;
 }
-
 .sv-prev:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--gray-300); }
 
 .sv-next {
@@ -269,25 +526,24 @@
   border: none;
   background: var(--green);
   color: #fff;
+  font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 800;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   box-shadow: 0 3px 0 var(--green-press);
   transition: transform 0.08s, box-shadow 0.08s;
 }
-
 .sv-next:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--green-press); }
 
-/* ── Invisible tap zones ─────────────────────────── */
+/* ── Tap zones ───────────────────────────────────── */
 .sv-tap {
   position: absolute;
-  top: 55px;          /* below header */
-  bottom: 100px;      /* above nav */
+  top: 55px; bottom: 100px;
   width: 40%;
   background: transparent;
   border: none;
   z-index: 15;
   cursor: pointer;
 }
-
 .sv-tap--left  { left: 0; }
 .sv-tap--right { right: 0; }
